@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Providers from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
   description: "Interactive map and list to find your next home.",
 };
 
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -25,7 +27,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-50 dark:bg-zinc-950`}>
-        {children}
+        {/* Providers as client boundary */}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
