@@ -2,14 +2,22 @@
 
 import { useAppSettings } from "@/context/AppSettingsProvider";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 export default function AdminControlsPage() {
   const { settings, updateSettings } = useAppSettings();
   const [termsText, setTermsText] = useState(settings.terms.text);
+  const { data: session } = useSession();
+  const role = (session?.user as { role?: string } | undefined)?.role || "user";
 
   return (
     <div className="max-w-3xl mx-auto py-8 px-4">
       <h1 className="text-2xl font-semibold mb-6">Admin Controls</h1>
+      {role !== "admin" && (
+        <p className="mb-4 text-sm text-amber-700 bg-amber-100 rounded-md p-2">
+          You are signed in as a non-admin user. Some controls may be hidden by server middleware in production.
+        </p>
+      )}
 
       <section className="mb-8">
         <h2 className="text-lg font-semibold mb-3">Agent Registration</h2>
