@@ -35,25 +35,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-zinc-50 dark:from-zinc-950 dark:to-zinc-900">
-      <header className="sticky top-0 z-10 backdrop-blur bg-white/70 dark:bg-zinc-900/70 border-b border-black/5 dark:border-white/10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-blue-600 text-white grid place-items-center font-bold shadow-sm">RE</div>
-            <h1 className="text-xl font-semibold tracking-tight">Find your next home</h1>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="hidden md:flex items-center gap-2 text-sm text-zinc-500">
-              <span>Map</span>
-              <span className="text-zinc-300">|</span>
-              <span>List</span>
-            </div>
-            <Link href="/register" className="rounded-lg bg-blue-600 text-white px-3 py-2 text-sm font-medium hover:bg-blue-700 shadow">
-              Register
-            </Link>
-          </div>
-        </div>
-      </header>
-
+      {/* Removed page-level header; global TopNav is used */}
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
         {/* Search + actions */}
         <div className="mb-4 flex items-center gap-3">
