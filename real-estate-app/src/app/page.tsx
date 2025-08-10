@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { properties as seedProperties } from "@/data/properties";
 import type { Property } from "@/types/property";
@@ -40,10 +41,15 @@ export default function Home() {
             <div className="h-9 w-9 rounded-lg bg-blue-600 text-white grid place-items-center font-bold">RE</div>
             <h1 className="text-xl font-semibold tracking-tight">Find your next home</h1>
           </div>
-          <div className="hidden md:flex items-center gap-2 text-sm text-zinc-500">
-            <span>Map</span>
-            <span className="text-zinc-300">|</span>
-            <span>List</span>
+          <div className="flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-2 text-sm text-zinc-500">
+              <span>Map</span>
+              <span className="text-zinc-300">|</span>
+              <span>List</span>
+            </div>
+            <Link href="/register" className="rounded-lg bg-blue-600 text-white px-3 py-2 text-sm font-medium hover:bg-blue-700">
+              Register
+            </Link>
           </div>
         </div>
       </header>
