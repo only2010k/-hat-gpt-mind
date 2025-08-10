@@ -76,6 +76,17 @@ function MapStateTracker({ onChange }: { onChange: (state: { zoom: number; bbox:
   return null;
 }
 
+function InitialMapState({ onChange }: { onChange: (state: { zoom: number; bbox: [number, number, number, number] }) => void }) {
+  const map = useMap();
+  useEffect(() => {
+    const b = map.getBounds();
+    const z = map.getZoom();
+    onChange({ zoom: z, bbox: [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()] });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return null;
+}
+
 function ClusterMarker({ lat, lng, count, clusterId, index }: { lat: number; lng: number; count: number; clusterId: number; index: Supercluster<{ cluster: boolean; propertyId?: string }>; }) {
   const map = useMap();
   const size = count < 10 ? 30 : count < 50 ? 36 : 44;
@@ -133,7 +144,7 @@ export default function LeafletMap({ properties, selectedId, onMarkerClick }: Le
 
   const index = useMemo(() => {
     const sc = new Supercluster<{ cluster: boolean; propertyId?: string }>({
-      radius: 60,
+      radius: 80,
       maxZoom: 12, // cluster from zoom 0..12
     });
     sc.load(points as Supercluster.PointFeature<{ cluster: boolean; propertyId?: string }> []);
@@ -173,7 +184,17 @@ export default function LeafletMap({ properties, selectedId, onMarkerClick }: Le
   );
 
   return (
-    <MapContainer center={center} zoom={5} zoomControl scrollWheelZoom className="h-full w-full rounded-xl">
+    <MapContainer
+      center={center}
+      zoom={5}
+      minZoom={2}
+      maxZoom={18}
+      zoomControl
+      scrollWheelZoom
+      doubleClickZoom
+      wheelDebounceTime={20}
+      className="h-full w-full rounded-xl"
+    >
       <TileLayer
         attribution={
           process.env.NEXT_PUBLIC_MAP_ATTR ||
@@ -182,6 +203,7 @@ export default function LeafletMap({ properties, selectedId, onMarkerClick }: Le
         url={process.env.NEXT_PUBLIC_MAP_TILES || "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}
       />
       {bounds && <FitBounds bounds={bounds} />}
+      <InitialMapState onChange={setMapState} />
       <MapStateTracker onChange={setMapState} />
 
       {/* Render clusters for zoom 0-12; individual markers for zoom 13-15 */}
