@@ -51,6 +51,11 @@ function FitBounds({ bounds }: { bounds: LatLngBoundsExpression }) {
 
 function MapStateTracker({ onChange }: { onChange: (state: { zoom: number; bbox: [number, number, number, number] }) => void }) {
   const map = useMapEvents({
+    load() {
+      const b = map.getBounds();
+      const z = map.getZoom();
+      onChange({ zoom: z, bbox: [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()] });
+    },
     moveend() {
       const b = map.getBounds();
       const z = map.getZoom();
@@ -68,18 +73,10 @@ function MapStateTracker({ onChange }: { onChange: (state: { zoom: number; bbox:
       });
     },
   });
-
-  useEffect(() => {
-    const b = map.getBounds();
-    const z = map.getZoom();
-    onChange({ zoom: z, bbox: [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()] });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return null;
 }
 
-function ClusterMarker({ lat, lng, count, clusterId }: { lat: number; lng: number; count: number; clusterId: number }) {
+function ClusterMarker({ lat, lng, count, clusterId, index }: { lat: number; lng: number; count: number; clusterId: number; index: Supercluster<{ cluster: boolean; propertyId?: string }>; }) {
   const map = useMap();
   const size = count < 10 ? 30 : count < 50 ? 36 : 44;
   const icon = L.divIcon({
@@ -94,9 +91,11 @@ function ClusterMarker({ lat, lng, count, clusterId }: { lat: number; lng: numbe
       icon={icon}
       eventHandlers={{
         click: () => {
-          const currentZoom = map.getZoom();
-          const nextZoom = Math.min(currentZoom + 3, map.getMaxZoom() || 18);
-          map.setView([lat, lng], nextZoom, { animate: true });
+          // Use supercluster to determine the best expansion zoom
+          const targetZoom = index.getClusterExpansionZoom(clusterId);
+          const max = map.getMaxZoom() || 18;
+          const nextZoom = Math.min(targetZoom, max);
+          map.flyTo([lat, lng], nextZoom, { animate: true, duration: 0.5 });
         },
       }}
     />
@@ -174,7 +173,7 @@ export default function LeafletMap({ properties, selectedId, onMarkerClick }: Le
   );
 
   return (
-    <MapContainer center={center} zoom={13} scrollWheelZoom className="h-full w-full rounded-xl">
+    <MapContainer center={center} zoom={5} zoomControl scrollWheelZoom className="h-full w-full rounded-xl">
       <TileLayer
         attribution={
           process.env.NEXT_PUBLIC_MAP_ATTR ||
@@ -192,11 +191,11 @@ export default function LeafletMap({ properties, selectedId, onMarkerClick }: Le
           // cluster
           if ((item.properties as { cluster?: boolean }).cluster) {
             const { point_count: count, cluster_id: clusterId } = item.properties as unknown as { point_count: number; cluster_id: number };
-            return <ClusterMarker key={`cluster-${clusterId}`} lat={lat} lng={lng} count={count} clusterId={clusterId} />;
+            return <ClusterMarker key={`cluster-${clusterId}`} lat={lat} lng={lng} count={count} clusterId={clusterId} index={index} />;
           }
           // single point
           if (mapState.zoom >= 13) {
-            const propertyId = item.properties.propertyId as string;
+            const propertyId = (item.properties as { propertyId?: string }).propertyId as string;
             const p = properties.find((pp) => pp.id === propertyId);
             if (p) return renderPointMarker(p);
           }
