@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Property } from "@/types/property";
 import clsx from "clsx";
 
@@ -38,36 +39,42 @@ export default function PropertyCard({ property, selected, onClick }: Props) {
   }).format(property.price);
 
   return (
-    <button
-      onClick={onClick}
+    <div
       className={clsx(
         "w-full text-left rounded-2xl border border-black/10 dark:border-white/15 overflow-hidden bg-white dark:bg-zinc-900 shadow-sm hover:shadow-xl transition-all hover:-translate-y-[2px]",
         selected ? "ring-2 ring-blue-500" : ""
       )}
     >
-      <div className="relative h-48 w-full">
-        <Image
-          src={property.imageUrl}
-          alt={property.title}
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover"
-        />
-        <div className="absolute top-3 left-3 rounded-full bg-white/90 backdrop-blur px-3 py-1 text-blue-700 text-sm font-semibold shadow">
-          {price}
+      <button onClick={onClick} className="block w-full text-left">
+        <div className="relative h-48 w-full">
+          <Image
+            src={property.imageUrl}
+            alt={property.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+          />
+          <div className="absolute top-3 left-3 rounded-full bg-white/90 backdrop-blur px-3 py-1 text-blue-700 text-sm font-semibold shadow">
+            {price}
+          </div>
         </div>
-      </div>
-      <div className="p-4">
-        <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 line-clamp-1">
-          {property.title}
-        </h3>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1 line-clamp-1">{property.address}</p>
-        <div className="mt-3 flex gap-5 text-xs text-zinc-700 dark:text-zinc-300 items-center">
-          <span className="inline-flex items-center gap-1.5"><BedIcon className="w-4 h-4" />{property.beds} bd</span>
-          <span className="inline-flex items-center gap-1.5"><BathIcon className="w-4 h-4" />{property.baths} ba</span>
-          <span className="inline-flex items-center gap-1.5"><AreaIcon className="w-4 h-4" />{property.sqft.toLocaleString()} sqft</span>
+        <div className="p-4">
+          <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 line-clamp-1">
+            {property.title}
+          </h3>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1 line-clamp-1">{property.address}</p>
+          <div className="mt-3 flex gap-5 text-xs text-zinc-700 dark:text-zinc-300 items-center">
+            <span className="inline-flex items-center gap-1.5"><BedIcon className="w-4 h-4" />{property.beds} bd</span>
+            <span className="inline-flex items-center gap-1.5"><BathIcon className="w-4 h-4" />{property.baths} ba</span>
+            <span className="inline-flex items-center gap-1.5"><AreaIcon className="w-4 h-4" />{property.sqft.toLocaleString()} sqft</span>
+          </div>
         </div>
+      </button>
+      <div className="px-4 pb-4">
+        <Link href={`/property/${property.id}`} className="inline-block rounded-md bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 px-3 py-1.5 text-xs font-medium hover:opacity-90">
+          View Details
+        </Link>
       </div>
-    </button>
+    </div>
   );
 }
