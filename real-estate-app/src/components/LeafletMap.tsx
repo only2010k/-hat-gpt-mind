@@ -74,8 +74,11 @@ export default function LeafletMap({ properties, selectedId, onMarkerClick }: Le
       className="h-full w-full rounded-xl"
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution={process.env.NEXT_PUBLIC_MAP_ATTR || '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}
+        url={
+          process.env.NEXT_PUBLIC_MAP_TILES ||
+          "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        }
       />
       {bounds && <FitBounds bounds={bounds} />}
       {properties.map((p) => (
