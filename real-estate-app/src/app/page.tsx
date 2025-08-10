@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Link from "next/link";
+// import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { properties as seedProperties } from "@/data/properties";
 import type { Property } from "@/types/property";
