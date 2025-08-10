@@ -79,6 +79,30 @@ function MapStateTracker({ onChange }: { onChange: (state: { zoom: number; bbox:
   return null;
 }
 
+function ClusterMarker({ lat, lng, count, clusterId }: { lat: number; lng: number; count: number; clusterId: number }) {
+  const map = useMap();
+  const size = count < 10 ? 30 : count < 50 ? 36 : 44;
+  const icon = L.divIcon({
+    html: `<div class="cluster-marker" style="width:${size}px;height:${size}px"><span>${count}</span></div>`,
+    className: "",
+    iconSize: [size, size],
+  });
+  return (
+    <Marker
+      key={`cluster-${clusterId}`}
+      position={[lat, lng]}
+      icon={icon}
+      eventHandlers={{
+        click: () => {
+          const currentZoom = map.getZoom();
+          const nextZoom = Math.min(currentZoom + 3, map.getMaxZoom() || 18);
+          map.setView([lat, lng], nextZoom, { animate: true });
+        },
+      }}
+    />
+  );
+}
+
 export type LeafletMapProps = {
   properties: Property[];
   selectedId?: string | null;
@@ -126,32 +150,6 @@ export default function LeafletMap({ properties, selectedId, onMarkerClick }: Le
     >[];
   }, [index, mapState]);
 
-  const map = useMap(); // we'll access map instance for cluster zoom
-
-  const renderClusterMarker = (lat: number, lng: number, count: number, clusterId: number) => {
-    const size = count < 10 ? 30 : count < 50 ? 36 : 44;
-    const icon = L.divIcon({
-      html: `<div class="cluster-marker" style="width:${size}px;height:${size}px"><span>${count}</span></div>`,
-      className: "",
-      iconSize: [size, size],
-    });
-
-    return (
-      <Marker
-        key={`cluster-${clusterId}`}
-        position={[lat, lng]}
-        icon={icon}
-        eventHandlers={{
-          click: () => {
-            const currentZoom = map.getZoom();
-            const nextZoom = Math.min(currentZoom + 3, map.getMaxZoom() || 18);
-            map.setView([lat, lng], nextZoom, { animate: true });
-          },
-        }}
-      />
-    );
-  };
-
   const renderPointMarker = (p: Property) => (
     <Marker
       key={p.id}
@@ -194,7 +192,7 @@ export default function LeafletMap({ properties, selectedId, onMarkerClick }: Le
           // cluster
           if ((item.properties as { cluster?: boolean }).cluster) {
             const { point_count: count, cluster_id: clusterId } = item.properties as unknown as { point_count: number; cluster_id: number };
-            return renderClusterMarker(lat, lng, count, clusterId);
+            return <ClusterMarker key={`cluster-${clusterId}`} lat={lat} lng={lng} count={count} clusterId={clusterId} />;
           }
           // single point
           if (mapState.zoom >= 13) {
