@@ -35,7 +35,6 @@ export default function GeneralRegisterPage() {
 
   const onCheckId = (e: React.FormEvent) => {
     e.preventDefault();
-    // Demo uniqueness check: pretend ids ending with "0" are taken
     if (idForm.nationalId.trim().endsWith("0")) {
       setIdTaken(true);
     } else {
@@ -51,23 +50,45 @@ export default function GeneralRegisterPage() {
       {step === 1 && (
         <form onSubmit={onSubmitReg} className="grid gap-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <input className="input" placeholder="First Name" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} />
-            <input className="input" placeholder="Last Name" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} />
+            <div>
+              <label className="block text-sm font-medium mb-1">First Name</label>
+              <input className="input w-full" placeholder="John" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Last Name</label>
+              <input className="input w-full" placeholder="Doe" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} />
+            </div>
           </div>
-          <input className="input" placeholder="Email Address" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+          <div>
+            <label className="block text-sm font-medium mb-1">Email Address</label>
+            <input className="input w-full" placeholder="you@example.com" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <input className="input" placeholder="Country" value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} />
-            <input className="input sm:col-span-2" placeholder="Phone Number" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+            <div>
+              <label className="block text-sm font-medium mb-1">Country</label>
+              <input className="input w-full" placeholder="e.g., Saudi Arabia" value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="block text-sm font-medium mb-1">Phone Number</label>
+              <input className="input w-full" placeholder="e.g., +966 55 123 4567" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+            </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <input className="input" placeholder="Password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
-            <input className="input" placeholder="Confirm Password" type="password" value={form.confirm} onChange={(e) => setForm({ ...form, confirm: e.target.value })} />
+            <div>
+              <label className="block text-sm font-medium mb-1">Password</label>
+              <input className="input w-full" placeholder="Strong password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Confirm Password</label>
+              <input className="input w-full" placeholder="Re-enter password" type="password" value={form.confirm} onChange={(e) => setForm({ ...form, confirm: e.target.value })} />
+            </div>
           </div>
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" checked={form.accept} onChange={(e) => setForm({ ...form, accept: e.target.checked })} />
             Accept Terms & Conditions
           </label>
-          <button className="btn-primary" type="submit">Register</button>
+          <button className="btn-primary" type="submit">Create Account</button>
+          <p className="text-xs text-zinc-500">We will send a verification link to your email.</p>
         </form>
       )}
 
@@ -96,8 +117,14 @@ export default function GeneralRegisterPage() {
             </div>
             {idMode !== "disabled" && (
               <form onSubmit={onCheckId} className="mt-3 grid gap-3">
-                <input className="input" placeholder="Nationality" value={idForm.nationality} onChange={(e) => setIdForm({ ...idForm, nationality: e.target.value })} />
-                <input className="input" placeholder="National ID Number" value={idForm.nationalId} onChange={(e) => setIdForm({ ...idForm, nationalId: e.target.value })} />
+                <div>
+                  <label className="block text-sm font-medium mb-1">Nationality</label>
+                  <input className="input w-full" placeholder="e.g., Saudi" value={idForm.nationality} onChange={(e) => setIdForm({ ...idForm, nationality: e.target.value })} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">National ID Number</label>
+                  <input className="input w-full" placeholder="Enter your ID number" value={idForm.nationalId} onChange={(e) => setIdForm({ ...idForm, nationalId: e.target.value })} />
+                </div>
                 <button className="btn-secondary" type="submit">Submit</button>
               </form>
             )}
@@ -134,23 +161,56 @@ export default function GeneralRegisterPage() {
           <h2 className="font-semibold">Fallback Verification Form (ID taken)</h2>
           <form className="grid gap-3">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <input className="input" placeholder="First Name" />
-              <input className="input" placeholder="Second Name" />
+              <div>
+                <label className="block text-sm font-medium mb-1">First Name</label>
+                <input className="input w-full" placeholder="First Name" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Second Name</label>
+                <input className="input w-full" placeholder="Second Name" />
+              </div>
             </div>
-            <input className="input" placeholder="Third Name (optional)" />
-            <input className="input" placeholder="Last Name" />
+            <div>
+              <label className="block text-sm font-medium mb-1">Third Name (optional)</label>
+              <input className="input w-full" placeholder="Third Name" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Last Name</label>
+              <input className="input w-full" placeholder="Last Name" />
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <input className="input" placeholder="Nationality" />
-              <input className="input" placeholder="National ID" />
+              <div>
+                <label className="block text-sm font-medium mb-1">Nationality</label>
+                <input className="input w-full" placeholder="Nationality" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">National ID</label>
+                <input className="input w-full" placeholder="National ID" />
+              </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <input className="input" placeholder="Date of Birth" type="date" />
-              <input className="input" placeholder="ID Expiry Date" type="date" />
-              <select className="input"><option>Male</option><option>Female</option><option>Other</option></select>
+              <div>
+                <label className="block text-sm font-medium mb-1">Date of Birth</label>
+                <input className="input w-full" placeholder="" type="date" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">ID Expiry Date</label>
+                <input className="input w-full" placeholder="" type="date" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Gender</label>
+                <select className="input w-full"><option>Male</option><option>Female</option><option>Other</option></select>
+              </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <input className="input" placeholder="Upload National ID (Front)" type="file" />
-              <input className="input" placeholder="Upload National ID (Back)" type="file" />
+              <div>
+                <label className="block text-sm font-medium mb-1">Upload National ID (Front)</label>
+                <input className="input w-full" placeholder="" type="file" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Upload National ID (Back)</label>
+                <input className="input w-full" placeholder="" type="file" />
+              </div>
             </div>
             <button className="btn-primary" type="button" onClick={() => alert("Submitted for admin review")}>Submit for Review</button>
           </form>
