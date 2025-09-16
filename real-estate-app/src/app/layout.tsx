@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Real Estate Finder",
-  description: "Interactive map and list to find your next home.",
+  title: "Interakt API Toolkit",
+  description: "Validate Interakt REST API keys and send plain WhatsApp messages.",
 };
 
 export default function RootLayout({
@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-50 dark:bg-zinc-950`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950`}>
         {children}
       </body>
     </html>
